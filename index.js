@@ -21,3 +21,139 @@ const allWagesFor = function () {
     return payable
 }
 
+//
+// Create an employee record from an array
+const createEmployeeRecord = function(array){
+    console.log("recordArray:", array)
+    return {
+        firstName: array[0],
+        familyName: array[1],
+        title: array[2],
+        payPerHour: array[3],
+        timeInEvents: [],
+        timeOutEvents: []    
+    }
+
+    /*const employee = {};
+    employee.firstName = array[0];
+    employee.familyName = array[1];
+    employee.title = array[2];
+    employee.payPerHour = array[3];
+    
+
+    employee.timeInEvents= [];
+    employee.timeOutEvents = [];     
+    
+    return employee */
+}
+
+const createEmployeeRecords = function(src) {
+    /*let employeeRecords = [];
+
+    src.forEach(function(empArray) {
+
+      const employee = createEmployeeRecord(empArray);
+      employeeRecords.push(employee);
+
+    });
+    return employeeRecords; */
+    
+    return src.map(createEmployeeRecord);
+    
+}
+
+
+const createTimeInEvent = function(stamp){
+
+    const dateTimeString = stamp;
+    const dateTimeArray = dateTimeString.split(" ");
+
+    const employeeTimeInObj = {
+
+        type: "TimeIn",
+        hour: parseInt(dateTimeArray[1]),
+        date: dateTimeArray[0]
+    }   
+
+    this.timeInEvents.push(employeeTimeInObj);
+    return this
+}
+
+const createTimeOutEvent = function(stamp){
+    const dateTimeString = stamp;
+    const dateTimeArray = dateTimeString.split(" ");
+
+    const employeeTimeOutObj = {
+
+        type: "TimeOut",
+        hour: parseInt(dateTimeArray[1]),
+        date: dateTimeArray[0]
+
+    }   
+
+    this.timeOutEvents.push(employeeTimeOutObj);
+    return this
+
+}
+
+const hoursWorkedOnDate = function(date){
+    const timeInEvent = this.timeInEvents.find((event) => event.date === date);
+    const timeOutEvent = this.timeOutEvents.find((event) => event.date === date);
+
+    const timeInHour = timeInEvent.hour;
+    const timeOutHour = timeOutEvent.hour;
+
+    const record = (timeOutHour - timeInHour)/100;
+
+    return record;
+}
+
+const wagesEarnedOnDate = function(date){
+    const employee = this
+    const record = hoursWorkedOnDate.call(employee, date);
+    const pay = employee.payPerHour;
+    const wagesEarned = record * pay;
+    return wagesEarned;
+}
+
+/*const findEmployeeByFirstName = function(srcArray, firstName) {
+
+    const employees = srcArray;
+
+    console.log("srcArray:", srcArray);
+
+
+    console.log("firstName:", firstName);
+    console.log(this)
+  
+    const employee = srcArray.find(emp => emp.firstName === firstName);
+
+    console.log("employee:", employee);
+    const familyName = employee ? employee.familyName : null;
+
+    console.log(familyName)
+    return familyName
+}*/
+
+
+
+const findEmployeeByFirstName=  function (srcArray, firstName) {
+        // Using srcArray parameter
+        console.log("Searching for employee with first name:", firstName);
+        const employee = srcArray.find(emp => emp.firstName === firstName);
+
+        // Using this (context of employeeManager)
+        console.log("Found employee in context:", employee);
+
+        const familyName = employee ? employee.familyName : null;
+        console.log("Family name:", familyName);
+
+        return familyName;
+}
+
+
+const calculatePayroll = function(array) {
+    return array.reduce((total, emp) => {
+        return total + allWagesFor.call(emp);
+    }, 0); 
+}
