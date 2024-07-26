@@ -57,7 +57,7 @@ const createEmployeeRecords = function(src) {
 
     });
     return employeeRecords; */
-    
+    console.log(this)
     return src.map(createEmployeeRecord);
     
 }
@@ -137,19 +137,23 @@ const wagesEarnedOnDate = function(date){
 
 
 
-const findEmployeeByFirstName=  function (srcArray, firstName) {
-        // Using srcArray parameter
-        console.log("Searching for employee with first name:", firstName);
-        const employee = srcArray.find(emp => emp.firstName === firstName);
+const findEmployeeByFirstName = function (srcArray, firstName) {
+    console.log("Searching for employee with first name:", firstName);
+    console.log("Debug Before forEach: " + this);
+    const employee = srcArray.find(emp => {
+        console.log(this); // `this` will be from `findEmployeeByFirstName`'s context
+        return emp.firstName === firstName;
+    }, this);
 
-        // Using this (context of employeeManager)
-        console.log("Found employee in context:", employee);
+    console.log("Found employee in context:", employee);
 
-        const familyName = employee ? employee.familyName : null;
-        console.log("Family name:", familyName);
+    const familyName = employee ? employee.familyName : undefined;
+    console.log("Family name:", familyName);
+     
+    
 
-        return familyName;
-}
+    return familyName ;
+};
 
 
 const calculatePayroll = function(array) {
